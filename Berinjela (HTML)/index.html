@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainaki - Hub de Academia Completo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <div class="logo" onclick="scrollToTop()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 6.5l11 11m0-11l-11 11"/>
+                        <circle cx="12" cy="5" r="3"/>
+                        <circle cx="12" cy="19" r="3"/>
+                    </svg>
+                    <span>Trainaki</span>
+                </div>
+                <nav>
+                    <button onclick="scrollToSection('gyms-section')">Procure academias</button>
+                    <button onclick="scrollToSection('workouts-section')">Listas de Treinos</button>
+                    <button onclick="scrollToSection('products-section')">Produtos</button>
+                    <button onclick="scrollToSection('support-section')">Suporte</button>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-outline btn-icon" onclick="toggleTheme()">
+                    <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                    <svg id="theme-icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+                
+                <!-- Auth Buttons (hidden when logged in) -->
+                <div id="auth-buttons">
+                    <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+                    <button class="btn btn-primary" onclick="openAuthModal('signup')">Sign Up</button>
+                </div>
+
+                <!-- User Dropdown (hidden when not logged in) -->
+                <div id="user-dropdown" class="user-dropdown hidden">
+                    <button class="user-button" onclick="toggleUserMenu()">
+                        <div class="avatar" id="user-avatar">U</div>
+                        <span id="user-name">Usuário</span>
+                    </button>
+                    <div class="dropdown-menu" id="user-menu">
+                        <button class="dropdown-item" onclick="openProfileModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Meu Perfil
+                        </button>
+                        <button class="dropdown-item" onclick="logout()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>All you need to create amazing workouts and find gyms</h1>
+            <p>Get workout playlists, products, and more.</p>
+            <button class="btn btn-primary" onclick="scrollToSection('main-content')">
+                Try Now
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <div class="container">
+            <!-- Gyms Section -->
+            <section id="gyms-section">
+                <div class="section-header">
+                    <h2>Encontre academias próximas</h2>
+                    <p>Descubra as melhores academias na sua região</p>
+                </div>
+
+                <div class="search-bar">
+                    <div class="input-wrapper">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="gym-search" placeholder="Buscar academias..." oninput="filterGyms()">
+                    </div>
+                </div>
+
+                <div class="cards-grid" id="gyms-grid"></div>
+            </section>
+
+            <!-- Workouts Section -->
+            <section id="workouts-section">
+                <div class="section-header">
+                    <div class="section-title-row">
+                        <h2>Treinos</h2>
+                        <button class="btn btn-primary" onclick="openCreateWorkoutModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Criar Treino
+                        </button>
+                    </div>
+                    <p>Explore, crie e compartilhe treinos com a comunidade</p>
+                </div>
+
+                <div class="tabs-list">
+                    <button class="tab-button active" onclick="switchWorkoutTab('browse')">Explorar Treinos</button>
+                    <button class="tab-button" onclick="switchWorkoutTab('my')">Meus Treinos</button>
+                    <button class="tab-button" onclick="switchWorkoutTab('saved')">Salvos</button>
+                </div>
+
+                <div id="workout-tab-browse" class="tab-content active">
+                    <div class="search-bar" style="margin-bottom: 1.5rem;">
+                        <div class="input-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            <input type="text" id="workout-search" placeholder="Buscar treinos..." oninput="filterWorkouts()">
+                        </div>
+                    </div>
+                    <div class="cards-grid" id="workouts-grid"></div>
+                </div>
+
+                <div id="workout-tab-my" class="tab-content">
+                    <div class="cards-grid" id="my-workouts-grid">
+                        <div class="text-center" style="grid-column: 1/-1; padding: 3rem 1rem;">
+                            <p class="card-description">Faça login para ver seus treinos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="workout-tab-saved" class="tab-content">
+                    <div class="text-center" style="padding: 3rem 1rem;">
+                        <p class="card-description">Você ainda não salvou nenhum treino.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products-section">
+                <div class="section-header">
+                    <h2>Produtos para Academia</h2>
+                    <p>Encontre os melhores produtos e suplementos em lojas confiáveis</p>
+                </div>
+
+                <div class="search-bar">
+                    <div class="input-wrapper">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="product-search" placeholder="Buscar produtos..." oninput="filterProducts()">
+                    </div>
+                    <select id="product-category" onchange="filterProducts()" style="padding-left: 2.5rem;">
+                        <option value="all">Todas Categorias</option>
+                        <option value="Suplementos">Suplementos</option>
+                        <option value="Acessórios">Acessórios</option>
+                        <option value="Equipamentos">Equipamentos</option>
+                    </select>
+                </div>
+
+                <div class="products-grid" id="products-grid"></div>
+            </section>
+
+            <!-- Support Section -->
+            <section id="support-section">
+                <div class="section-header">
+                    <h2>Suporte</h2>
+                    <p>Encontre respostas para suas dúvidas ou entre em contato conosco</p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Entre em Contato</h3>
+                        </div>
+                        <div class="card-content">
+                            <p class="mb-2">Precisa de ajuda? Entre em contato conosco através do email:</p>
+                            <a href="mailto:QueSusto9@gmail.com">
+                                <button class="btn btn-primary">QueSusto9@gmail.com</button>
+                            </a>
+                            <p class="text-sm" style="margin-top: 1rem; color: var(--text-secondary);">
+                                Horário de atendimento: Segunda a Sexta, 9h às 18h
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Perguntas Frequentes</h3>
+                            <p class="card-description">Confira as respostas para as dúvidas mais comuns</p>
+                        </div>
+                        <div class="card-content">
+                            <div id="faq-accordion"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>direitos reservados 2025 © Trainaki</p>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="auth-modal-title">Entrar</h3>
+                <p class="card-description" id="auth-modal-desc">Entre com suas credenciais para acessar sua conta</p>
+            </div>
+            <form id="auth-form" onsubmit="handleAuth(event)">
+                <div class="form-group" id="name-group" style="display: none;">
+                    <label for="auth-name">Nome</label>
+                    <input type="text" id="auth-name" placeholder="Seu nome" style="padding-left: 0.75rem;">
+                </div>
+                <div class="form-group">
+                    <label for="auth-email">Email</label>
+                    <input type="email" id="auth-email" placeholder="seu@email.com" required style="padding-left: 0.75rem;">
+                </div>
+                <div class="form-group">
+                    <label for="auth-password">Senha</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" required style="padding-left: 0.75rem;">
+                </div>
+                <button type="submit" class="btn btn-primary w-full" id="auth-submit">Entrar</button>
+            </form>
+            <div class="text-center text-sm mt-4">
+                <p id="auth-switch">
+                    Não tem uma conta?
+                    <button type="button" onclick="switchAuthMode()" style="color: var(--primary); background: none; border: none; cursor: pointer; text-decoration: underline;">
+                        Cadastre-se
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Meu Perfil</h3>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+                <div class="avatar" style="width: 5rem; height: 5rem; font-size: 2rem;" id="profile-avatar">U</div>
+                <div>
+                    <h3 id="profile-name">Usuário</h3>
+                    <p class="card-description" id="profile-email">email@exemplo.com</p>
+                </div>
+            </div>
+            <div class="tabs-list">
+                <button class="tab-button active" onclick="switchProfileTab('saved')">Treinos Salvos</button>
+                <button class="tab-button" onclick="switchProfileTab('comments')">Comentários</button>
+                <button class="tab-button" onclick="switchProfileTab('ratings')">Avaliações</button>
+            </div>
+            <div id="profile-tab-saved" class="tab-content active">
+                <div class="text-center p-4">
+                    <p class="card-description">Você ainda não salvou nenhum treino.</p>
+                </div>
+            </div>
+            <div id="profile-tab-comments" class="tab-content">
+                <div class="text-center p-4">
+                    <p class="card-description">Você ainda não fez nenhum comentário.</p>
+                </div>
+            </div>
+            <div id="profile-tab-ratings" class="tab-content">
+                <div class="text-center p-4">
+                    <p class="card-description">Você ainda não fez nenhuma avaliação.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gym Details Modal -->
+    <div id="gym-modal" class="modal">
+        <div class="modal-content modal-large" id="gym-modal-content"></div>
+    </div>
+
+    <!-- Workout Details Modal -->
+    <div id="workout-modal" class="modal">
+        <div class="modal-content modal-large" id="workout-modal-content"></div>
+    </div>
+
+    <!-- Create Workout Modal -->
+    <div id="create-workout-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Criar Novo Treino</h3>
+                <p class="card-description">Monte seu treino e compartilhe com a comunidade</p>
+            </div>
+            <form id="create-workout-form" onsubmit="handleCreateWorkout(event)">
+                <div class="form-group">
+                    <label for="workout-title">Título do Treino</label>
+                    <input type="text" id="workout-title" placeholder="Ex: Treino de Costas - Hipertrofia" required style="padding-left: 0.75rem;">
+                </div>
+                <div class="form-group">
+                    <label for="workout-description">Descrição</label>
+                    <textarea id="workout-description" placeholder="Descreva o objetivo e benefícios do treino..." required></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="workout-difficulty">Dificuldade</label>
+                        <select id="workout-difficulty" required style="padding-left: 0.75rem;">
+                            <option value="">Selecione</option>
+                            <option value="Iniciante">Iniciante</option>
+                            <option value="Intermediário">Intermediário</option>
+                            <option value="Avançado">Avançado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workout-category">Categoria</label>
+                        <select id="workout-category" required style="padding-left: 0.75rem;">
+                            <option value="">Selecione</option>
+                            <option value="Hipertrofia">Hipertrofia</option>
+                            <option value="Funcional">Funcional</option>
+                            <option value="Cardio">Cardio</option>
+                            <option value="Força">Força</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="workout-duration">Duração (minutos)</label>
+                    <input type="number" id="workout-duration" placeholder="60" min="1" required style="padding-left: 0.75rem;">
+                </div>
+                <div class="form-group">
+                    <label>Exercícios</label>
+                    <div id="exercises-container">
+                        <div class="exercise-input mb-2">
+                            <input type="text" placeholder="Nome do exercício" class="exercise-name w-full mb-2" style="padding-left: 0.75rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <input type="number" placeholder="Séries" class="exercise-sets" value="3" min="1" style="padding-left: 0.75rem;">
+                                <input type="text" placeholder="Repetições" class="exercise-reps" value="12" style="padding-left: 0.75rem;">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline w-full" onclick="addExerciseInput()">
+                        + Adicionar Exercício
+                    </button>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Publicar Treino</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
