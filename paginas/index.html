@@ -1,20 +1,35 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Academia PowerFit</title>
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-<h1>Treinaki</h1>
-<button>login
+  <div class="login-box">
+    <h1>PowerFit Academia</h1>
+    <div class="linha"></div>
 
-</button>
+    <form action="/login" method="post">
+      <div class="input-box">
+        <label for="usuario">Usuário</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" required />
+      </div>
 
-    </header>
-<main>
-    <h2>treinaki</h2>
-    <h3>teste</h3>
+      <div class="input-box">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
+      </div>
+
+      <input type="submit" value="Entrar" class="btn" />
+    </form>
+
+    <div class="links">
+      <a href="#">Esqueceu a senha?</a> |
+      <a href="#">Cadastre-se</a>
+    </div>
+  </div>
 </body>
 </html>
